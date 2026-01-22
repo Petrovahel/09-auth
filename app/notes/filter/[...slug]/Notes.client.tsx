@@ -39,7 +39,6 @@ export default function NotesClient({ tag, dehydratedState }: NotesClientProps) 
 function NotesContent({ tag }: { tag: string }) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const perPage = 12;
 
   const debouncedSearch = useDebouncedCallback((value: string) => {
