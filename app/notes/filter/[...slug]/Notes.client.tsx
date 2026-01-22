@@ -9,13 +9,11 @@ import {
   DehydratedState,
   keepPreviousData
 } from '@tanstack/react-query';
-
+import Link from 'next/link';
 import { fetchNotes } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import Loading from '@/components/Loading/Loading';
 import Error from '@/components/Error/Error';
 import { useDebouncedCallback } from 'use-debounce';
@@ -74,21 +72,15 @@ function NotesContent({ tag }: { tag: string }) {
           />
         )}
 
-        <button className={css.button} onClick={() => setShowModal(true)}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
+        </Link>
       </header>
 
       {isLoading && <Loading />}
       {isError && <Error message="Error fetching notes." />}
       {data && data.notes.length === 0 && <p>No notes found.</p>}
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
-
-      {showModal && (
-        <Modal onClose={() => setShowModal(false)}>
-          <NoteForm onClose={() => setShowModal(false)} />
-        </Modal>
-      )}
     </div>
   );
 }

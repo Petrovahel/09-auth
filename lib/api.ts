@@ -4,7 +4,21 @@ import type { Note } from '../types/note';
 const BASE_URL = 'https://notehub-public.goit.study/api';
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
+export type NoteTag =
+  | 'Todo'
+  | 'Work'
+  | 'Personal'
+  | 'Meeting'
+  | 'Shopping';
+
+export const NOTE_TAGS: NoteTag[] = [
+  'Todo',
+  'Work',
+  'Personal',
+  'Meeting',
+  'Shopping',
+];
+
 
 export interface CreateNoteInput {
   title: string;
@@ -45,6 +59,13 @@ export async function fetchNoteById(id: string): Promise<Note> {
   });
   return response.data;
 }
+
+export type NewNoteData = {
+  title: string;
+  content: string;  
+  tag: NoteTag;
+}
+
 
 
 
