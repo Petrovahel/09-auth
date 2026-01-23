@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  QueryClient,
-  QueryClientProvider,
-  HydrationBoundary,
-  useQuery,
-  DehydratedState,
-  keepPreviousData
-} from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import Link from 'next/link';
 import { fetchNotes } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
@@ -19,40 +12,33 @@ import Error from '@/components/Error/Error';
 import { useDebouncedCallback } from 'use-debounce';
 import css from './NotesPage.module.css';
 
-type NotesClientProps = {
+type NotesContentProps = {
   tag: string;
-  dehydratedState?: DehydratedState | null;
+  perPage?: number;
 };
 
-export default function NotesClient({ tag, dehydratedState }: NotesClientProps) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydratedState}>
-        <NotesContent tag={tag} />
-      </HydrationBoundary>
-    </QueryClientProvider>
-  );
-}
-
-function NotesContent({ tag }: { tag: string }) {
+export default function NotesContent({ tag, perPage = 12 }: NotesContentProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const perPage = 12;
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  const debouncedSearch = useDebouncedCallback((value: string) => {
-    setSearch(value);
+  const debounceSearch = useDebouncedCallback((value: string) => {
+    setDebouncedSearch(value);
     setPage(1);
   }, 500);
 
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    debounceSearch(value);
+  };
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', page, perPage, search, tag],
+    queryKey: ['notes', page, perPage, debouncedSearch, tag],
     queryFn: () =>
       fetchNotes(
         page,
         perPage,
-        search,
+        debouncedSearch,
         tag === 'all' ? undefined : tag
       ),
     placeholderData: keepPreviousData,
@@ -61,7 +47,7 @@ function NotesContent({ tag }: { tag: string }) {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox onSearch={debouncedSearch} />
+        <SearchBox value={search} onChange={handleSearchChange} />
 
         {data && data.totalPages > 1 && (
           <Pagination
