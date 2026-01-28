@@ -1,0 +1,71 @@
+'use client';
+
+import css from './AuthNavigation.module.css';
+import Link from 'next/link';
+import { useAuthStore } from '@/lib/store/authStore';
+import { logout } from '@/lib/api/clientApi';
+import { useRouter } from 'next/navigation';
+
+//Якщо користувач не авторизований, в AuthNavigation мають відображатися
+// посилання на сторінки реєстрації (Register) та входу (Login).
+
+// Якщо користувач авторизований, в AuthNavigation мають відображатися:
+// посилання на сторінку профілю (Profile);
+// кнопка Logout, яка при натисканні викликає функцію виходу з акаунта
+// і виконує редірект на сторінку Login.
+
+// Важливо: логіку виведення елементів Register, Login, Profile, Logout
+// в хедері необхідно побудувати через умовний рендер на основі
+//  значення isAuthenticated з Zustand-стора.
+
+// components/AuthNavigation/AuthNavigation.tsx
+
+const AuthNavigation = () => {
+   const router = useRouter();
+  
+   const { isAuthenticated, user } = useAuthStore();
+
+   const clearIsAuthenticated = useAuthStore(
+    (state) => state.clearIsAuthenticated,
+   );
+
+   const handleLogout = async () => {
+      await logout();
+      clearIsAuthenticated();
+      router.push('/sign-in');
+   };
+
+   return isAuthenticated ? (
+      <>
+         <li className={css.navigationItem}>
+            <Link href="/profile" prefetch={false} className={css.navigationLink}>
+               Profile
+            </Link>
+         </li>
+
+         <li className={css.navigationItem}>
+            <p className={css.userEmail}>{user?.email}</p>
+            <button className={css.logoutButton} onClick={handleLogout}>
+               Logout
+            </button>
+         </li>
+         </>
+   ) : (
+      <> 
+
+         <li className={css.navigationItem}>
+            <Link href="/sign-in" prefetch={false} className={css.navigationLink}>
+               Login
+            </Link>
+         </li>
+
+         <li className={css.navigationItem}>
+            <Link href="/sign-up" prefetch={false} className={css.navigationLink}>
+               Sign up
+            </Link>
+         </li>
+      </>
+   );
+};
+
+export default AuthNavigation;
