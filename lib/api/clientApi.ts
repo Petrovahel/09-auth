@@ -58,7 +58,6 @@ export const fetchNotes = async (
     return response.data;
 };
 
-//Отримати нотатку за ID
 export const fetchNoteByID = async (id: string): Promise<Note> => {
     const endPoint = `/notes/${id}`;
 
@@ -67,7 +66,7 @@ export const fetchNoteByID = async (id: string): Promise<Note> => {
     return response.data;
 }
 
-//створити нотатку
+
 export const createNote = async (note: NewNote): Promise<Note> => {
     const endPoint = `/notes`;
 
@@ -76,7 +75,6 @@ export const createNote = async (note: NewNote): Promise<Note> => {
     return response.data;
 }
 
-//видалити нотатки
 export const deleteNote = async (id: string): Promise<Note> => {
     const endPoint = `/notes/${id}`;
 

@@ -3,8 +3,6 @@
 // намагається перейти на приватну сторінку, має виконуватися вихід і
 // контент не відображатись. Під час перевірки показуйте лоедер.
 
-// components/AuthProvider/AuthProvider.tsx
-
 'use client';
 
 import { checkSession, getMe } from '@/lib/api/clientApi';

@@ -18,8 +18,6 @@ import { useRouter } from 'next/navigation';
 // в хедері необхідно побудувати через умовний рендер на основі
 //  значення isAuthenticated з Zustand-стора.
 
-// components/AuthNavigation/AuthNavigation.tsx
-
 const AuthNavigation = () => {
    const router = useRouter();
   
