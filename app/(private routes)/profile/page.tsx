@@ -1,10 +1,15 @@
 import css from './ProfilePage.module.css';
 import Link from 'next/link';
 import { getMe } from '@/lib/api/serverApi';
+import Image from 'next/image';
+import type { Metadata } from "next";
 
-// Додайте на сторінку профілю усі небхідні meta-теги.
-//Для коректної роботи з віддаленими зображеннями у Next.js (аватар профілю) потрібно в next.config.ts
-// додати розділ images з масивом remotePatterns, який обов’язково містить hostname: 'ac.goit.global'.
+
+export const metadata: Metadata = {
+  title: "Profile — NoteHub",
+  description: "User profile page in NoteHub",
+};
+
 
 const Profile = async () => {
   const user = await getMe();
@@ -19,12 +24,12 @@ const Profile = async () => {
                     </Link>
                 </div>
                 <div className={css.avatarWrapper}>
-                    <img
-                        src="Avatar"
-                        alt="User Avatar"
-                        width={120}
-                        height={120}
-                        className={css.avatar}
+                    <Image
+                      src={user.avatar}
+                      alt="User Avatar"
+                      width={120}
+                      height={120}
+                     className={css.avatar}
                     />
                 </div>
                 <div className={css.profileInfo}>

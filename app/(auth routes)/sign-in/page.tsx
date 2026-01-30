@@ -3,9 +3,10 @@
 import css from './SignInPage.module.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, LoginRequest } from '@/lib/api/clientApi';
+import { login } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
-import { ApiError } from '@/lib/api/apiError'
+import { ApiError } from '@/lib/api/apiError';
+import type { LoginRequest } from '@/types/user';
 
 const SignIn = () => {
   const router = useRouter();

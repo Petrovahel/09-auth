@@ -1,37 +1,11 @@
-//fetchNotes
-// fetchNoteById
-// createNote
-// deleteNote
-// register - У разі успішної реєстрації має відбуватись автоматичний редірект
-//    користувача на сторінку профілю /profile.
-// login
-// logout
-// checkSession
-// getMe
-// updateMe
-//Оголосіть у файлі lib/api/clientApi.ts функцію для запиту на автентифікацію користувача.
-//У разі успішної автентифікації має відбуватись автоматичний редірект користувача на сторінку профілю /profile.
-
 import nextServer from "./api";
-import { User } from "../../types/user";
-
-
-export type RegisterRequest = {
-  email: string;
-  userName: string;
-  avatar: string;
-};
+import { User, RegisterRequest, UpdateUser, LoginRequest } from "../../types/user";
+import { Note, NewNote, NoteTag, NotesResponse } from "../../types/note";
 
 
 export const register = async (data: RegisterRequest): Promise<User> => {
   const res = await nextServer.post<User>('/auth/register', data);
   return res.data;
-};
-
-
-export type LoginRequest = {
-  email: string;
-  password: string;
 };
 
 export const login = async (data: LoginRequest) => {
@@ -59,6 +33,57 @@ export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout')
 };
 
+export const updateMe = async (userData: UpdateUser): Promise<User> =>  {
+    const endPoint = '/users/me';
+
+    const response = await nextServer.patch<User>(endPoint, userData);
+    
+    return response.data;
+}
+
+export const fetchNotes = async (
+    page: number,
+    perPage: number,
+    search?: string,
+    tag?: NoteTag 
+): Promise<NotesResponse> => {
+    const params: Record<string, string | number> = { page, perPage };
+    if (search) params.search = search;
+    if (tag) params.tag = tag;
+    
+    const endPoint = '/notes';
+
+    const response = await nextServer.get<NotesResponse>(endPoint, { params});
+    
+    return response.data;
+};
+
+//Отримати нотатку за ID
+export const fetchNoteByID = async (id: string): Promise<Note> => {
+    const endPoint = `/notes/${id}`;
+
+    const response = await nextServer.get<Note>(endPoint);
+        
+    return response.data;
+}
+
+//створити нотатку
+export const createNote = async (note: NewNote): Promise<Note> => {
+    const endPoint = `/notes`;
+
+    const response = await nextServer.post<Note>(endPoint, note);
+
+    return response.data;
+}
+
+//видалити нотатки
+export const deleteNote = async (id: string): Promise<Note> => {
+    const endPoint = `/notes/${id}`;
+
+    const response = await nextServer.delete<Note>(endPoint);
+
+    return response.data;
+};
 
 
 

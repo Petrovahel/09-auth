@@ -4,9 +4,8 @@ import { useId } from "react";
 import type { NewNote, NoteTag } from "@/types/note";
 import css from "./NoteForm.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from "@/lib/api";
+import { createNote } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
-import { NOTE_TAGS } from "@/lib/api";
 import { useNoteDraftStore } from '@/lib/store/noteStore';
 
 export default function NoteForm() {
@@ -79,21 +78,26 @@ export default function NoteForm() {
       </div>
 
       <div className={css.formGroup}>
-        <label htmlFor={`${fieldId}-tag`}>Tag</label>
-        <select
-          id={`${fieldId}-tag`}
-          name="tag"
-          value={draft?.tag}
-          className={css.select}
-          onChange={handleChange}
-        >
-          {NOTE_TAGS.map(tag => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-      </div>
+  <label htmlFor={`${fieldId}-tag`}>Tag</label>
+
+  <select
+    id={`${fieldId}-tag`}
+    name="tag"
+    value={draft?.tag}
+    className={css.select}
+    onChange={handleChange}
+    required
+  >
+    <option value="Todo">Todo</option>
+    <option value="Work">Work</option>
+    <option value="Personal">Personal</option>
+    <option value="Meeting">Meeting</option>
+    <option value="Shopping">Shopping</option>
+  </select>
+
+  <span className={css.error} />
+</div>
+
 
       <div className={css.actions}>
         <button type="button" className={css.cancelButton} onClick={handleCancel}>
