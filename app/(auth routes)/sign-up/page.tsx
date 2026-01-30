@@ -3,10 +3,10 @@
 import css from './SignUpPage.module.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { register, RegisterRequest } from '@/lib/api/clientApi';
+import { register } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
 import { ApiError } from '@/lib/api/apiError';
-//Форма має надсилати запит до API з підтримкою cookies.
+import { RegisterRequest } from '@/types/user';
 
 const SignUp = () => {
   const router = useRouter();
