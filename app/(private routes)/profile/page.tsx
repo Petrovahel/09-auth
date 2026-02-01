@@ -6,12 +6,26 @@ import type { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "Profile — NoteHub",
-  description: "User profile page in NoteHub",
+    title: 'User profile',
+    description: 'Page with user profile information',
+    openGraph: {
+        title: 'User profile',
+        description: 'Page with user profile information',
+        url: 'https://notehub.com',
+        images: [
+        {
+            url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
+            width: 1200,
+            height: 630,
+            alt: 'User profile',
+        },
+        ],
+        type: 'website',
+    },
 };
 
 
-const Profile = async () => {
+ const Profile = async () => {
   const user = await getMe();
 
   return (
