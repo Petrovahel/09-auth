@@ -10,6 +10,7 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Loading from '@/components/Loading/Loading';
 import Error from '@/components/Error/Error';
 import { useDebouncedCallback } from 'use-debounce';
+import { NoteTag } from '@/types/note';
 import css from './NotesPage.module.css';
 
 type NotesContentProps = {
@@ -32,15 +33,11 @@ export default function NotesContent({ tag, perPage = 12 }: NotesContentProps) {
     debounceSearch(value);
   };
 
+  const noteTag: NoteTag | undefined = tag === 'all' ? undefined : (tag as NoteTag);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', page, perPage, debouncedSearch, tag],
-    queryFn: () =>
-      fetchNotes(
-        page,
-        perPage,
-        debouncedSearch,
-        tag === 'all' ? undefined : tag
-      ),
+    queryKey: ['notes', page, perPage, debouncedSearch, noteTag],
+    queryFn: () => fetchNotes(page, perPage, debouncedSearch, noteTag),
     placeholderData: keepPreviousData,
   });
 
