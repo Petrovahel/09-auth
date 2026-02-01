@@ -20,3 +20,7 @@ export type LoginRequest = {
   email: string;
   password: string;
 };
+
+export interface StatusMessage {
+    message: string;
+}

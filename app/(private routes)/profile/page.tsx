@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getMe } from '@/lib/api/serverApi';
 import Image from 'next/image';
 import type { Metadata } from "next";
+import { redirect } from 'next/navigation';
 
 
 export const metadata: Metadata = {
@@ -26,7 +27,9 @@ export const metadata: Metadata = {
 
 
  const Profile = async () => {
-  const user = await getMe();
+     const user = await getMe();
+     
+     if (!user) { redirect('/login'); }
 
   return (
     <main className={css.mainContent}>

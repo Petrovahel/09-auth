@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { parse } from 'cookie';
 import { checkSession } from './lib/api/serverApi';
 
-const privateRoutes = ['/profile'];
+const privateRoutes = ['/profile', '/notes'];
 const publicRoutes = ['/sign-in', '/sign-up'];
 
 export async function proxy(request: NextRequest) {
@@ -27,13 +27,13 @@ export async function proxy(request: NextRequest) {
           const options = {
             expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
             path: parsed.Path,
-            maxAge: Number(parsed['Max-Age']),
+             maxAge: Number(parsed['Max-Age']),
           };
           if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
           if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
+
         }
-        // Якщо сесія все ще активна:
-        // для публічного маршруту — виконуємо редірект на головну.
+      
         if (isPublicRoute) {
           return NextResponse.redirect(new URL('/', request.url), {
             headers: {
@@ -41,7 +41,7 @@ export async function proxy(request: NextRequest) {
             },
           });
         }
-        // для приватного маршруту — дозволяємо доступ
+      
         if (isPrivateRoute) {
           return NextResponse.next({
             headers: {
@@ -51,29 +51,25 @@ export async function proxy(request: NextRequest) {
         }
       }
     }
-    // Якщо refreshToken або сесії немає:
-    // публічний маршрут — дозволяємо доступ
+    
     if (isPublicRoute) {
       return NextResponse.next();
     }
 
-    // приватний маршрут — редірект на сторінку входу
     if (isPrivateRoute) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
   }
 
-  // Якщо accessToken існує:
-  // публічний маршрут — виконуємо редірект на головну
   if (isPublicRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
-  // приватний маршрут — дозволяємо доступ
+
   if (isPrivateRoute) {
     return NextResponse.next();
   }
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/sign-in', '/sign-up'],
+  matcher: ['/profile/:path*', '/sign-in', '/sign-up', '/notes/:path*'],
 };
