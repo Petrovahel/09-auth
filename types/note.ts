@@ -15,13 +15,6 @@ export interface NewNote {
     tag: NoteTag;
 }
 
-export interface NewNote {
-    title: string;
-    content: string;
-    tag: NoteTag;
-}
-
-
 export type NoteId = Note["id"];
 export type Tag = Note["tag"];
 
