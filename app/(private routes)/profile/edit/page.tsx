@@ -6,9 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getMe, updateMe } from '@/lib/api/clientApi';
 import { User } from '@/types/user';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function EditProfilePage() {
   const router = useRouter();
+  const setUserInStore = useAuthStore(state => state.setUser);
+
   const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState('');
 
@@ -21,7 +24,11 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateMe({ username: username });
+
+    const updatedUser = await updateMe({ username });
+
+    setUserInStore(updatedUser);
+
     router.push('/profile');
   };
 

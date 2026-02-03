@@ -1,7 +1,7 @@
 import { User } from '../../types/user';
 import nextServer from './api';
 import { cookies } from 'next/headers';
-import { Note } from '../../types/note';
+import { Note, NoteTag, NotesResponse } from '../../types/note';
 
 
 export const getMe = async (): Promise<User | null> => {
@@ -44,14 +44,26 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
   return data;
 };
 
-export const fetchNotes = async (): Promise<Note[]> => {
-  const cookieStore = await cookies();
+export const fetchNotes = async (
+    page: number,
+    perPage: number,
+    search?: string,
+    tag?: NoteTag 
+): Promise<NotesResponse> => {
+    const params: Record<string, string | number> = { page, perPage };
+    if (search) params.search = search;
+    if (tag) params.tag = tag;
+    
+    const endPoint = '/notes';
 
-  const { data } = await nextServer.get('/notes', {
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
-  });
+    const cookiesStore = await cookies();
 
-  return data;
+    const response = await nextServer.get<NotesResponse>(endPoint, {
+        params,
+        headers: {
+            Cookie: cookiesStore.toString(),
+        }
+    });
+    
+    return response.data;
 };
