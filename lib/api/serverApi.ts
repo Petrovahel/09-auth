@@ -34,6 +34,7 @@ export const checkSession = async () => {
 };
 
 
+
 export const fetchNoteById = async (id: string): Promise<Note> => {
   const cookieStore = await cookies();
   const { data } = await nextServer.get(`/notes/${id}`, {
